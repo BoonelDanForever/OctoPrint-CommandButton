@@ -1,0 +1,11 @@
+<div class="form-group">
+    <label for="commands">Commands:</label>
+<textarea id="commands" class="form-control" rows="5" name="commands">
+    {% if commands is defined %}
+        {{ commands | join("\n") }}
+    {% else %}
+        <!-- Provide a fallback or empty text area if commands are undefined -->
+        No commands added yet.
+    {% endif %}
+</textarea>    <p class="help-block">Enter one command per line.</p>
+</div>

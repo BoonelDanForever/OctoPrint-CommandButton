@@ -1,4 +1,4 @@
-{% for command in commands %}
+{% for command in settings.plugins.commandbutton.commands %}
     <button class="btn btn-default send-command-button" data-command="{{ command }}">
         Run: {{ command }}
     </button>

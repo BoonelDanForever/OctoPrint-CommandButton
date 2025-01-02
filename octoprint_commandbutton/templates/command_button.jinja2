@@ -1,0 +1,14 @@
+<!-- templates/command_button_settings.jinja2 -->
+<form class="form-horizontal">
+
+    <h4>Command Buttons</h4>
+    <div data-bind="foreach: commands">
+        <!-- For each command in 'commands', create a button -->
+        <button class="btn btn-default" data-bind="text: $data, click: function() { runCommand($data); }"></button>
+    </div>
+<div>
+    <p data-bind="text: commands">hi</p>
+        <button class="btn btn-default" data-bind="text: commands, click: runCommand"></button>
+</div>
+
+</form>
