@@ -1,19 +1,19 @@
 $(function() {
-    function sendHelpCommand() {
+    // Dynamically add click listeners for all command buttons
+    $('.send-command-button').click(function() {
+        var command = $(this).data('command');
+        
         $.ajax({
-            url: API_BASEURL + "plugin/send_help_command",
+            url: API_BASEURL + "plugin/command_button",
             type: "POST",
             dataType: "json",
+            data: {command: command},
             success: function(data) {
-                alert("Help command output:\n" + data.result);
+                alert("Command output:\n" + data.result);
             },
             error: function(xhr, status, error) {
-                alert("Error sending help command.");
+                alert("Error sending command.");
             }
         });
-    }
-
-    $('#send-help-command-button').click(function() {
-        sendHelpCommand();
     });
 });

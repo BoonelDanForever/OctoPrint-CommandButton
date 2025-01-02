@@ -1,3 +1,5 @@
-<button id="send-help-command-button" class="btn btn-default">
-    Send Help Command
-</button>
+{% for command in commands %}
+    <button class="btn btn-default send-command-button" data-command="{{ command }}">
+        Run: {{ command }}
+    </button>
+{% endfor %}
