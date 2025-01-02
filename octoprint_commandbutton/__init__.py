@@ -58,4 +58,5 @@ class CommandButtonPlugin(octoprint.plugin.OctoPrintPlugin):
         super().on_settings_save(data)
 
 __plugin_name__ = "OctoPrint CommandButton"
+__plugin_pythoncompat__ = ">=3,<4"
 __plugin_implementation__ = CommandButtonPlugin()
