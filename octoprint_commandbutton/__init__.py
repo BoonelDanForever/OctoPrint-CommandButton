@@ -5,7 +5,8 @@ import octoprint.plugin
 class CommandButtonPlugin(octoprint.plugin.TemplatePlugin, octoprint.plugin.AssetPlugin, octoprint.plugin.SimpleApiPlugin, octoprint.plugin.EventHandlerPlugin, octoprint.plugin.SettingsPlugin, octoprint.plugin.StartupPlugin):
 
 
-#todo make it look good. python is kinda good cause in order to run it has to look at least somewhat good lol java NOPE
+#think d think
+#todo make it look good.
 
 
     def __init__(self):
@@ -75,7 +76,8 @@ class CommandButtonPlugin(octoprint.plugin.TemplatePlugin, octoprint.plugin.Asse
 
         try:
             # Simulating command execution, this should be replaced with actual logic (e.g., sarge.run())
-            print("ran: " + command)
+            import sarge
+            p = sarge.run(command, async_=True)
             if name in self.toggle_data:
                 self.toggle_data[name] = not self.toggle_data[name]
             return f"Command '{name}' executed"
@@ -87,20 +89,12 @@ class CommandButtonPlugin(octoprint.plugin.TemplatePlugin, octoprint.plugin.Asse
     def get_api_commands(self):
         list = {}
         for c in self.command_definitions:
-            print(c["name"])
             list[c["name"]] = ""
-
-        print(list)
         return list
 
     def on_api_command(self, command, args):
         # Handle API requests, specifically for sending commands
-        print("called")
-        self._logger.info("yep")
-        print(args)
-        print(command)
-        result = self.send_command(command)
-        return dict(result=result)
+        return dict(result=self.send_command(command))
 
     def get_update_information(self):
         # Plugin update information
@@ -142,5 +136,3 @@ class CommandButtonPlugin(octoprint.plugin.TemplatePlugin, octoprint.plugin.Asse
 __plugin_name__ = "OctoPrint CommandButton"
 __plugin_pythoncompat__ = ">=3,<4"
 __plugin_implementation__ = CommandButtonPlugin()
-
-print("HIIII")

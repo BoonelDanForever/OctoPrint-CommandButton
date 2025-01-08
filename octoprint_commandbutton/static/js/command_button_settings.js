@@ -29,13 +29,13 @@ console.log("here");
         // Add a new command definition
         self.addCommandDefinition = function () {
             self.command_definitions.push({
-                name: '',
-                toggle: false,
-                command: '',
-                command_press: '',
-                command_unpress: '',
-                on_startup: false,
-                enabled: true,
+                name: ko.observable(''),
+        	toggle: ko.observable(false),
+        	command: ko.observable(''),
+        	command_press: ko.observable(''),
+        	command_unpress: ko.observable(''),
+        	on_startup: ko.observable(false),
+        	enabled: ko.observable(true),
             });
         };
 
