@@ -1,11 +1,66 @@
-<div class="form-group">
-    <label for="commands">Commands:</label>
-<textarea id="commands" class="form-control" rows="5" name="commands">
-    {% if commands is defined %}
-        {{ commands | join("\n") }}
-    {% else %}
-        <!-- Provide a fallback or empty text area if commands are undefined -->
-        No commands added yet.
-    {% endif %}
-</textarea>    <p class="help-block">Enter one command per line.</p>
-</div>
+<form class="form-horizontal">
+    <h3>Command Button Definitions</h3>
+    <p>Define buttons for your sidebar. Use "Toggle" to create buttons with separate press/unpress actions.</p>
+
+    <div class="row-fluid">
+        <div class="span2"><h4>Name</h4></div>
+        <div class="span1"><h4>Toggle</h4></div>
+        <div class="span4"><h4>Command(s)</h4></div>
+        <div class="span1"><h4>On Startup</h4></div>
+        <div class="span1"><h4>Enable</h4></div>
+        <div class="span1"><h4>Delete</h4></div>
+    </div>
+
+    <!-- Dynamically generated command definitions -->
+    <div data-bind="foreach: command_definitions">
+        <div class="row-fluid" style="margin-bottom: 5px">
+            <!-- Name field -->
+            <div class="span2 control-group">
+                <input type="text" class="span12" data-bind="value: name" placeholder="Button Name">
+            </div>
+
+            <!-- Toggle checkbox -->
+            <div class="span1 control-group">
+                <input type="checkbox" data-bind="checked: toggle">
+            </div>
+
+    <!-- maybe have both just leave one blank for the toggle or not idk lol? -->
+
+
+            <!-- Command fields -->
+            <div class="span4 control-group">
+                <!-- Single command field when Toggle is off -->
+                <div data-bind="visible: !toggle()">
+                    <input type="text" class="input-block-level" data-bind="value: command" placeholder="Command">
+                </div>
+                <!-- Dual command fields when Toggle is on -->
+                <div data-bind="visible: toggle">
+                    <input type="text" class="input-block-level" data-bind="value: command" placeholder="Press Command">
+                    <input type="text" class="input-block-level" data-bind="value: command_unpress" placeholder="Unpress Command">
+                </div>
+            </div>
+
+            <!-- On Startup checkbox -->
+            <div class="span1 control-group">
+                <input type="checkbox" data-bind="checked: on_startup">
+            </div>
+
+            <!-- Enable checkbox -->
+            <div class="span1 control-group">
+                <input type="checkbox" data-bind="checked: enabled">
+            </div>
+
+            <!-- Delete button -->
+            <div class="span1 control-group">
+                <a title="Remove Command Definition" class="btn btn-danger" data-bind="click: $parent.removeCommandDefinition"><i class="icon-trash"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add command button -->
+    <div class="row-fluid">
+        <div class="offset11 span1">
+            <a title="Add Command Definition" class="btn btn-primary" data-bind="click: addCommandDefinition"><i class="icon-plus"></i></a>
+        </div>
+    </div>
+</form>

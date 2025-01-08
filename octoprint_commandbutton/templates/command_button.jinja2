@@ -1,14 +1,11 @@
-<!-- templates/command_button_settings.jinja2 -->
 <form class="form-horizontal">
 
-    <h4>Command Buttons</h4>
-    <div data-bind="foreach: commands">
-        <!-- For each command in 'commands', create a button -->
-        <button class="btn btn-default" data-bind="text: $data, click: function() { runCommand($data); }"></button>
-    </div>
-<div>
-    <p data-bind="text: commands">hi</p>
-        <button class="btn btn-default" data-bind="text: commands, click: runCommand"></button>
-</div>
+    <!-- TODO: make button change colors if toggled? -->
 
+
+<h4>Command Buttons</h4>
+    <div data-bind="foreach: command_definitions">
+        <!-- For each command in 'commands', create a button -->
+        <button class="btn btn-default" data-bind="text: $data.name(), click: function() { $parent.runCommand($data.name()); }, visible: $data.enabled() && $data.name().length != 0"></button>
+    </div>
 </form>

@@ -2,82 +2,112 @@ $(function() {
     function CommandButtonViewModel(parameters) {
         var self = this;
 
-        // Ensure parameters is passed correctly
-        if (!parameters || parameters.length === 0) {
-            console.error("Error: Parameters not passed to CommandButtonViewModel.");
-            return;
-        }
+self.r = "";
 
         // Get the settingsViewModel (which should be the first parameter)
         self.settingsViewModel = parameters[0]; // Settings view model
-        if (!self.settingsViewModel) {
-            console.error("Error: Settings view model is not available.");
-            return;
-        }
 
-	console.log(self.settingsViewModel);
-	console.log(self.settingsViewModel.commands);
+        self.command_definitions = ko.observableArray([]);
 
+        // Function to update the command definitions
+        self.updateCommands = function() {
+console.log(self.settingsViewModel.settings);
+console.log(self.command_definitions());
+            if (self.settingsViewModel.settings && self.settingsViewModel.settings.plugins.commandbutton) {
+                // Assuming the settings contain a list of command definitions as an array of objects
+                self.command_definitions(self.settingsViewModel.settings.plugins.commandbutton.command_definitions());
+            } else {
+                self.timeoutUpdate();
+            }
+        };
 
-        // Access commands from the settings: settingsViewModel.settings.plugins.commandbutton.commands
-        self.commands = ko.observableArray(self.settingsViewModel.commands || []); // Fallback to an empty array if no commands are defined
+        // Timeout update to keep refreshing if settings are not available
+        self.timeoutUpdate = function() {
+            setTimeout(function() {
+                self.updateCommands();
+            }, 100);
+        };
 
-        // Run the command (when a button is clicked)
-        self.runCommand = function() {
-	    d = 'a';
-            console.log("Running command:", d); // For debugging
-	    console.log(d);
+        // Add a new command definition
+        self.addCommandDefinition = function() {
+            self.command_definitions.push({
+                name: '',
+                enabled: true,
+                command: '',
+                on_startup: false
+            });
+        };
+
+        // Remove a command definition
+        self.removeCommandDefinition = function(command) {
+            self.command_definitions.remove(command);
+        };
+
+self.runCommand = function(command) {
+            console.log("Running command:", command); // For debugging
 
             // Send the command to the backend using an AJAX request
-/*
-            $.ajax({
-                url: API_BASEURL + "plugin/commandbutton", // Adjust your plugin's endpoint
-                type: "POST",
-                dataType: "json",
-                data: JSON.stringify({
-                    command: "hi"
-                }),
-                contentType: "application/json; charset=UTF-8",
-                success: function(response) {
-                    console.log("Command sent successfully:", response);
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error sending command:", error);
-                }
-            });
-*/
+
 $.ajax({
                 url: API_BASEURL + "plugin/commandbutton",
                 type: "POST",
                 dataType: "json",
                 data: JSON.stringify({
-                    command: "send_command_button"
+                    command: command
                 }),
                 contentType: "application/json; charset=UTF-8",
-                success: function (data, status) {}
+                success: function (r) {
+console.log("success");
+		    console.log(r);
+self.r = r.result;
+self.updatePopupOptions();
+self.popup = new PNotify(self.popupOptions);
+}
             });
         };
 
-        // Handle settings binding (before settings are fully bound to the view)
-        self.onSettingsBeforeBinding = function() {
-            if (self.settingsViewModel.settings.commands) {
-                self.commands(self.settingsViewModel.commands);
+
+        PNotify.prototype.options.confirm.buttons = [];
+self.updatePopupOptions = function() {
+
+self.popupOptions = {
+            title: gettext('Command Button'),
+            text: self.r,
+            type: 'info',
+            icon: true,
+            hide: false,
+            confirm: {
+                confirm: true,
+                buttons: [{
+                    text: 'Close',
+                    addClass: 'btn-block btn-danger',
+                    promptTrigger: true,
+                    click: function(notice, value){
+                        notice.remove();
+                        notice.get().trigger("pnotify.cancel", [notice, value]);
+                    }
+                }]
+            },
+            buttons: {
+                closer: true,
+                sticker: false,
+            },
+            history: {
+                history: false
             }
         };
+}
 
-        // Update settings after binding to the view
-        self.onSettingsAfterBinding = function() {
-            self.settingsViewModel.commands(self.commands());
-        };
+self.updatePopupOptions();
 
-        self.onBeforeSave = function() {
-            console.log("onBeforeSave: Updating the command buttons list.");
-    
-            // Update the settings object
-            self.settingsViewModel.commands(self.commands());
 
-    	    // Add any additional changes you might need to make
-	};
+
+
+
+
+
+        // Initial call to update commands
+        self.timeoutUpdate();
     }
 
     // Register the view model with the correct parameters (settingsViewModel)
