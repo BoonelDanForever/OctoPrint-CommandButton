@@ -77,7 +77,7 @@ class CommandButtonPlugin(octoprint.plugin.TemplatePlugin, octoprint.plugin.Asse
         try:
             # Simulating command execution, this should be replaced with actual logic (e.g., sarge.run())
             import sarge
-            p = sarge.run(command, async_=True)
+            p = sarge.run(command)
             if name in self.toggle_data:
                 self.toggle_data[name] = not self.toggle_data[name]
             return f"Command '{name}' executed"
